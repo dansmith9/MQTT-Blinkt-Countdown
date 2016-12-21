@@ -15,7 +15,11 @@ def on_message(client, userdata, msg):
     t=msg.payload.decode('UTF-8')
     if t.isdigit():
         t=int(t)
+    elif t.lower()=="abort":
+        print("ABORT")
+        return
     else:
+        print("****Unknown message****")
         return
     print(t,"- this is a",type(t))
     while t:
