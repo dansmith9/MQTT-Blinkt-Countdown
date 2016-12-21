@@ -9,9 +9,15 @@ def on_connect(client, userdata, flags, rc):
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe("/oav/timer/221")
+    client.subscribe("DSM/timer/test")
     
 def on_message(client, userdata, msg):
+    t=msg.payload.decode('UTF-8')
+    if t.isdigit():
+        t=int(t)
+    else:
+        return
+    print(t,"- this is a",type(t))
     while t:
         mins,secs = divmod(t,60)
         print("t =",t)
@@ -111,9 +117,13 @@ def on_message(client, userdata, msg):
         t-=1
         sleep(1)
 
-client = mqtt.Client()
+client = mqtt.Client(protocol='MQTTv311')
 client.on_connect = on_connect
 client.on_message = on_message
+
+client.connect("192.168.1.5", 1883, 60)
+
+client.loop_forever()
 
 #count=int(input("Enter the seconds: "))
 #timer(count)
